@@ -213,6 +213,10 @@ await newEntry.save();
     return res.status(500).json({ message: "Error saving registration", error: error.message });
   }
 });
+// Health check endpoint for Render
+app.get('/healthz', (req, res) => {
+  res.send('OK');
+});
 
 // ---------------- Start Server ----------------
 const PORT = process.env.PORT || 5000;
