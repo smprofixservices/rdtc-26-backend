@@ -1,0 +1,303 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Contact Us | RDTC-26</title>
+<link rel="icon" href="logo.png" />
+
+<style>
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+  font-family: Arial, sans-serif;
+  background:
+    linear-gradient(135deg, rgba(173,216,230,0.35), rgba(0,0,128,0.35), rgba(255,69,0,0.25)),
+    url('contact-bg.jpg') center/cover no-repeat fixed;
+  color: #222;
+}
+
+/* HEADER */
+header {
+  background: rgba(0,0,0,0.75);
+  padding: 30px 20px;
+  text-align: center;
+  color: #fff;
+}
+
+header img {
+  max-width: 90px;
+  margin-bottom: 10px;
+}
+
+header h1 {
+  font-size: 2.3rem;
+}
+
+header p {
+  margin-top: 8px;
+  font-size: 1.1rem;
+}
+
+/* MAIN CONTAINER */
+.container {
+  max-width: 1100px;
+  margin: 60px auto;
+  padding: 20px;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 40px;
+}
+
+/* CARDS */
+.info, .form-box {
+  background: rgba(255,255,255,0.95);
+  border-radius: 12px;
+  padding: 30px;
+  box-shadow: 0 10px 25px rgba(0,0,0,0.12);
+}
+
+.info h2, .form-box h2 {
+  margin-bottom: 15px;
+  color: #000080;
+}
+
+.info p {
+  line-height: 1.7;
+  margin-bottom: 12px;
+}
+
+.info strong { color: #000080; }
+
+/* WHATSAPP */
+.whatsapp {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin: 15px 0;
+}
+
+.whatsapp img {
+  width: 45px;
+  animation: float 2s infinite ease-in-out;
+}
+
+@keyframes float {
+  0%,100% { transform: translateY(0); }
+  50% { transform: translateY(-8px); }
+}
+
+/* MAP */
+.map {
+  margin-top: 20px;
+  height: 260px;
+  border-radius: 10px;
+  overflow: hidden;
+  box-shadow: 0 6px 15px rgba(0,0,0,0.15);
+}
+
+.map iframe {
+  width: 100%;
+  height: 100%;
+  border: 0;
+}
+
+/* DIRECTION SLIDER */
+.direction-slider {
+  margin-top: 35px;
+}
+
+.direction-slider h3 {
+  margin-bottom: 15px;
+  text-align: center;
+  color: #000080;
+}
+
+.slider {
+  position: relative;
+  height: 260px;
+  overflow: hidden;
+  border-radius: 12px;
+  box-shadow: 0 6px 18px rgba(0,0,0,0.15);
+}
+
+.slide {
+  position: absolute;
+  inset: 0;
+  opacity: 0;
+  transition: opacity 1s ease;
+}
+
+.slide.active { opacity: 1; }
+
+.slide img {
+  width: 100%;
+  height: 100%;
+  object-fit: fill;
+}
+
+.slide span {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  padding: 12px;
+  background: rgba(0,0,0,0.65);
+  color: #fff;
+  font-weight: bold;
+}
+
+/* FORM */
+label {
+  display: block;
+  margin-top: 15px;
+  font-weight: bold;
+}
+
+input, textarea {
+  width: 100%;
+  padding: 12px;
+  margin-top: 6px;
+  border-radius: 6px;
+  border: 1px solid #ccc;
+}
+
+textarea {
+  min-height: 120px;
+}
+
+button {
+  margin-top: 20px;
+  padding: 14px;
+  width: 100%;
+  border: none;
+  border-radius: 8px;
+  background: linear-gradient(135deg, #ADD8E6, #000080, #FF4500);
+  color: #fff;
+  font-size: 1.1rem;
+  font-weight: bold;
+  cursor: pointer;
+}
+
+.success {
+  margin-top: 15px;
+  color: green;
+  font-weight: bold;
+  text-align: center;
+}
+
+/* FOOTER */
+footer {
+  text-align: center;
+  padding: 20px;
+  background: rgba(0,0,0,0.75);
+  color: #fff;
+  margin-top: 60px;
+}
+
+/* MOBILE */
+@media (max-width: 900px) {
+  .container { grid-template-columns: 1fr; }
+}
+</style>
+</head>
+
+<body>
+
+<header>
+  <img src="logo.png" alt="Revive NUB Logo">
+  <h1>Contact RDTC-26</h1>
+  <p>We’d love to hear from you</p>
+</header>
+
+<div class="container">
+
+<!-- INFO -->
+<div class="info">
+  <h2>Get in Touch</h2>
+
+  <p><strong>Email:</strong>
+    <a href="https://mail.google.com/mail/?view=cm&fs=1&to=revivenub@gmail.com" target="_blank">
+      revivenub@gmail.com
+    </a>
+  </p>
+
+  <div class="whatsapp">
+    <a href="https://wa.me/2348108208426" target="_blank">
+      <img src="images-removebg-preview (7).png" alt="WhatsApp">
+    </a>
+    <span><strong>WhatsApp:</strong> Chat with us</span>
+  </div>
+
+  <p><strong>Location:</strong> 146B Berom Road, West of Mines Quarters, Jos</p>
+
+  <!-- MAP -->
+  <div class="map">
+    <iframe
+      src="https://www.google.com/maps?hl=en&q=West%20of%20Mines%20Quarters,%20Berom%20Road,%20Jos&z=17&output=embed"
+      loading="lazy">
+    </iframe>
+  </div>
+
+  <!-- SLIDER -->
+  <div class="direction-slider">
+    <h3>How to Locate Us</h3>
+    <div class="slider">
+      <div class="slide active"><img src="Location 1.png"><span>West of Mines Junction</span></div>
+      <div class="slide"><img src="Location 2.png"><span>Main Junction(Road leading to standard,to plateau riders, to hosanna musical) take the turn to Hossana musical </span></div>
+      <div class="slide"><img src="Location 3.png"><span>take the route leading to Hossana musical equipment, continue going straight</span></div>
+      <div class="slide"><img src="Location 4.png"><span>Ansa rudin school</span></div>
+      <div class="slide"><img src="Location 5.png"><span>Hossana Musical junction, take the route leading to area command</span></div>
+      <div class="slide"><img src="Location 6.png"><span>the bridge to D'cardimon hotel sign post</span></div>
+      <div class="slide"><img src="Location 7.png"><span>go past moses zira porvision store</span></div>
+      <div class="slide"><img src="Location 8.png"><span>patient right care sign board,take the right turn</span></div>
+      <div class="slide"><img src="Location 9.png"><span>Final Turn</span></div>
+      <div class="slide"><img src="Location 10.jpg"><span>Revive NUB Equip Training Center</span></div>
+    </div>
+  </div>
+</div>
+
+<!-- FORM -->
+<div class="form-box">
+  <h2>Send a Message</h2>
+  <form id="contactForm">
+    <label>Full Name</label>
+    <input type="text" required>
+
+    <label>Email</label>
+    <input type="email" required>
+
+    <label>Message</label>
+    <textarea required></textarea>
+
+    <button type="submit">Send Message</button>
+    <div class="success" id="successMsg"></div>
+  </form>
+</div>
+
+</div>
+
+<footer>
+© 2026 Revive NUB · RDTC-26 · All Rights Reserved
+</footer>
+
+<script>
+const slides = document.querySelectorAll('.slide');
+let index = 0;
+
+setInterval(() => {
+  slides[index].classList.remove('active');
+  index = (index + 1) % slides.length;
+  slides[index].classList.add('active');
+}, 10000);
+
+document.getElementById('contactForm').addEventListener('submit', e => {
+  e.preventDefault();
+  document.getElementById('successMsg').textContent =
+    "Thank you! Your message has been received.";
+  e.target.reset();
+});
+</script>
+
+</body>
+</html>

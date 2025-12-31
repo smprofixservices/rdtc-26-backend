@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>RDTC‑26 Registration</title>
+<style>
+body {
+  font-family: Arial, sans-serif;
+  margin: 0; padding: 0;
+  background: 
+    linear-gradient(rgba(173,216,230,0.7), rgba(0,0,128,0.7), rgba(255,69,0,0.7)),
+    url('logo.png') no-repeat center left;
+  background-size: 250px auto;
+  background-blend-mode: overlay;
+  background-attachment: fixed;
+}
+.container { max-width: 700px; margin: 40px auto; background: #fff; padding: 25px; border-radius: 10px; }
+h2 { text-align: center; margin-bottom: 20px; }
+.step { display: none; }
+.step.active { display: block; }
+label { display: block; margin-top: 12px; font-weight: bold; }
+input, select, textarea { width: 100%; padding: 10px; margin-top: 6px; border-radius: 6px; border: 1px solid #ccc; }
+textarea { resize: vertical; min-height: 90px; }
+.buttons { margin-top: 20px; display: flex; justify-content: space-between; }
+button {
+  padding: 10px 20px;
+  background: linear-gradient(135deg, #ADD8E6 0%, #000080 50%, #FF4500 100%);
+  border: none; color: #fff; border-radius: 6px; cursor: pointer; font-weight: bold;
+}
+button:disabled { opacity: 0.5; cursor: not-allowed; }
+.success { text-align: center; color: green; font-weight: bold; margin-top: 15px; }
+</style>
+</head>
+<body>
+
+<div class="container">
+  <h2>RDTC‑26 Registration</h2>
+
+  <form id="registrationForm">
+    <!-- Stage 1 -->
+    <div class="step active">
+      <h3>Stage 1 – Batch</h3>
+      <label>Year</label><input type="number" name="year" required>
+      <label>Version model</label>
+      <select name="version" required>
+        <option value="">Select</option>
+        <option value="1.0">1.0 (Jan – April)</option>
+        <option value="2.0">2.0 (May – Aug)</option>
+        <option value="3.0">3.0 (Sept – Dec)</option>
+      </select>
+    </div>
+
+    <!-- Stage 2 -->
+    <div class="step">
+      <h3>Stage 2 – Personal Details</h3>
+      <label>Full Name</label><input type="text" name="fullName" required>
+      <label>Date of Birth</label><input type="date" name="dob" required>
+      <label>Phone Number</label><input type="text" name="phone" required>
+      <label>Occupation</label><input type="text" name="occupation">
+      <label>Email</label><input type="email" name="email" required>
+      <label>Areas of Strength / Gifting</label><textarea name="gifting"></textarea>
+    </div>
+
+    <!-- Stage 3 -->
+    <div class="step">
+      <h3>Stage 3 – Spiritual Background</h3>
+      <label>Church Name</label><input type="text" name="churchName">
+      <label>Pastor's Name</label><input type="text" name="pastorName">
+      <label>Church Address</label><textarea name="churchAddress"></textarea>
+    </div>
+
+    <!-- Stage 4 -->
+    <div class="step">
+      <h3>Stage 4 – Consent</h3>
+      <label>Parent/Guardian Consent?</label>
+      <select name="consent" required>
+        <option value="">Select</option>
+        <option value="Yes">Yes</option>
+        <option value="No">No</option>
+      </select>
+      <label>Parent / Guardian Name</label><input type="text" name="guardianName">
+      <label>Parent / Guardian Phone</label><input type="text" name="guardianPhone">
+    </div>
+
+    <!-- Stage 5 -->
+    <div class="step">
+      <h3>Stage 5 – Personal Statement</h3>
+      <label>About Yourself</label><textarea name="about"></textarea>
+      <label>Goals & Aspirations</label><textarea name="goals"></textarea>
+      <label>Values</label><textarea name="values"></textarea>
+      <label>Expectations from Training</label><textarea name="expectations"></textarea>
+    </div>
+
+    <!-- Stage 6 -->
+    <div class="step">
+      <h3>Stage 6 – Terms & Conditions</h3>
+      <label><input type="checkbox" name="truth" required> All info is true</label><br>
+      <label><input type="checkbox" name="rules" required> Will comply with RDTC rules</label><br>
+      <label><input type="checkbox" name="attendance" required> Will attend all classes</label><br>
+      <label><input type="checkbox" name="confidential" required> Keep materials confidential</label>
+    </div>
+
+    <div class="buttons">
+      <button type="button" id="prevBtn" disabled>Back</button>
+      <button type="button" id="nextBtn">Next</button>
+    </div>
+  </form>
+  <!-- Move success message OUTSIDE the form -->
+  <div id="successMessage" class="success"></div>
+</div>
+
+<script>
+  const steps = document.querySelectorAll('.step');
+  let currentStep = 0;
+
+  const nextBtn = document.getElementById('nextBtn');
+  const prevBtn = document.getElementById('prevBtn');
+  const form = document.getElementById('registrationForm');
+  const successMessage = document.getElementById('successMessage');
+
+  function showStep(index) {
+    steps.forEach((step, i) => step.classList.toggle('active', i === index));
+    prevBtn.disabled = index === 0;
+    nextBtn.textContent = index === steps.length - 1 ? 'Submit' : 'Next';
+  }
+
+  nextBtn.addEventListener('click', async () => {
+    if (currentStep < steps.length - 1) {
+      currentStep++;
+      showStep(currentStep);
+    } else {
+      try {
+        const formData = Object.fromEntries(new FormData(form));
+
+        const res = await fetch('/register', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(formData)
+        });
+
+        if (!res.ok) throw new Error('Network response was not ok');
+
+        const data = await res.json();
+
+        // Hide the form and show success screen
+        form.style.display = 'none';
+        successMessage.innerHTML = `
+          <h2>🎉 Registration Successful!</h2>
+          <p>Thank you for registering for RDTC‑26. Your information has been successfully submitted.</p>
+        `;
+      } catch (err) {
+        console.error(err);
+        alert('Network Error. Please try again.');
+      }
+    }
+  });
+
+  prevBtn.addEventListener('click', () => {
+    if (currentStep > 0) {
+      currentStep--;
+      showStep(currentStep);
+    }
+  });
+</script>
+
+
+</body>
+</html>

@@ -1,0 +1,254 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Revive NUB Discipleship Training Course</title>
+  <link rel="icon" href="logo.png" type="image/png">
+  <style>
+    /* Reset */
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body, html { font-family: Arial, sans-serif; }
+
+    /* Hero Slider */
+    .hero {
+      position: relative;
+      width: 100%;
+      height: 90vh;
+      overflow: hidden;
+    }
+
+    .hero img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover; /* cover for full-screen hero */
+      position: absolute;
+      top: 0;
+      left: 0;
+      opacity: 0;
+      transition: opacity 1s ease-in-out;
+    }
+
+    .hero img.active {
+      opacity: 1;
+    }
+
+    /* Overlay gradient */
+    .hero::before {
+      content: '';
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(135deg, rgba(173,216,230,0.5), rgba(0,0,128,0.5), rgba(255,69,0,0.3));
+      top: 0;
+      left: 0;
+      z-index: 1;
+    }
+
+    /* Logo & Title Overlay */
+    .hero .overlay {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      text-align: center;
+      color: white;
+      z-index: 2;
+      text-shadow: 2px 2px 8px rgba(0,0,0,0.6);
+      padding: 0 20px;
+    }
+
+    .hero .overlay img {
+      max-width: 150px;
+      margin-bottom: 20px;
+    }
+
+    .hero .overlay h1 {
+      font-size: 3rem;
+    }
+
+    /* Vision Section */
+    .vision {
+      padding: 60px 20px;
+      text-align: center;
+      background: #f4f4f4;
+    }
+
+    .vision h2 { font-size: 2rem; margin-bottom: 20px; }
+    .vision p { font-size: 1.2rem; max-width: 800px; margin: 0 auto; line-height: 1.6; }
+
+    /* Courses Section */
+    .courses {
+      padding: 60px 20px;
+      text-align: center;
+      background: #fff;
+    }
+
+    .courses h2 { font-size: 2rem; margin-bottom: 40px; }
+    .course-grid {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 20px;
+    }
+
+    .course-card {
+      background: #f0f8ff;
+      padding: 20px;
+      border-radius: 10px;
+      width: 100%;
+      max-width: 300px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+      transition: transform 0.3s;
+    }
+
+    .course-card:hover { transform: translateY(-5px); }
+
+    .course-card h3 { margin-bottom: 10px; color: #000080; }
+    .course-card p { font-size: 0.95rem; color: #333; }
+
+    /* Call to Action */
+    .cta {
+      text-align: center;
+      padding: 60px 20px;
+      background: linear-gradient(135deg, #ADD8E6, #000080, #FF4500);
+    }
+
+    /* Floating Contact Button */
+.floating-contact {
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  width: 80px;
+  height: 80px;
+  z-index: 1000;
+  animation: float 2s infinite ease-in-out;
+}
+
+.floating-contact img {
+  width: 100%;
+  height: 100%;
+  border-radius: 180px;
+}
+
+@keyframes float {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-10px); }
+}
+
+
+    .cta a {
+      padding: 15px 35px;
+      background: #fff;
+      color: #000080;
+      text-decoration: none;
+      font-weight: bold;
+      border-radius: 8px;
+      font-size: 1.2rem;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+      transition: all 0.3s;
+      display: inline-block;
+      width: 80%;
+      max-width: 300px;
+      text-align: center;
+    }
+    
+
+    .cta a:hover { transform: translateY(-3px); }
+
+    /* Responsive */
+    @media(max-width: 1024px){
+      .hero .overlay h1 { font-size: 2.5rem; }
+    }
+
+    @media(max-width:768px){
+      .hero .overlay h1 { font-size: 2rem; }
+      .course-grid { flex-direction: column; align-items: center; }
+    }
+
+    @media(max-width:480px){
+      .hero .overlay h1 { font-size: 1.5rem; }
+      .cta a { font-size: 1rem; padding: 12px 20px; }
+    }
+
+  </style>
+</head>
+<body>
+
+  <!-- Hero Slider -->
+  <section class="hero">
+    <img src="picture_1.jpg" class="active" alt="Slide 1">
+    <img src="picture_2.jpg" alt="Slide 2">
+    <img src="picture_3.jpg" alt="Slide 3">
+    <img src="picture_4.jpg" alt="Slide 4">
+    <img src="RDTC-25_MINISTERS_3x.jpg" alt="Slide 5">
+
+    <div class="overlay">
+      <img src="logo.png" alt="Revive NUB Logo">
+      <h1>Revive NUB Discipleship Training Course</h1>
+    </div>
+  </section>
+
+   <!-- Floating Customer Care Icon -->
+<a href="contact.html" target="_blank" class="floating-contact">
+  <img src="download-removebg-preview (6).png" alt="Contact Us" />
+</a>
+
+  <!-- Vision Section -->
+  <section class="vision">
+    <h2>Our Vision</h2>
+    <p>
+      To build, train & equip young believers doctrinally, psychologically & spiritually in the matters that pertain unto life and godliness (2nd Peter 1:1-3).
+    </p>
+  </section>
+
+  <!-- Courses Section -->
+  <section class="courses">
+    <h2>Our Courses</h2>
+    <div class="course-grid">
+      <div class="course-card">
+        <h3>Parakletology</h3>
+        <p>Redemption Realities (RR101), The Holy Spirit (THS102), Priesthood (PPF103), The Supernatural Life (TSL104), Character School (105)</p>
+      </div>
+      <div class="course-card">
+        <h3>Leadership</h3>
+        <p>Concept of Leadership (COL201), Principle of Leadership (POL202), Visions (VSSS203)</p>
+      </div>
+      <div class="course-card">
+        <h3>Metamorphosis</h3>
+        <p>Identity (ID301), Mindset & Strongholds (MS302), Time Management & Time Graph (TMG303), Human Relations (HRS304), Physical & Health Education (PHE305)</p>
+      </div>
+      <div class="course-card">
+        <h3>Service & Finance</h3>
+        <p>Ministry Kingdom Service, Kingdom Advancement, Evangelism, Concept of Finance, Pillars of Wealth, How to Start a Business</p>
+      </div>
+    </div>
+  </section>
+
+ 
+
+
+  <!-- Call to Action -->
+  <section class="cta">
+    <a href="course.html">Explore Course</a>
+  </section>
+
+  
+
+  <!-- Slider Script -->
+  <script>
+    const slides = document.querySelectorAll('.hero img');
+    let current = 0;
+
+    function nextSlide() {
+      slides[current].classList.remove('active');
+      current = (current + 1) % slides.length;
+      slides[current].classList.add('active');
+    }
+
+    setInterval(nextSlide, 6000); // Change slide every 6 seconds
+  </script>
+
+</body>
+</html>
