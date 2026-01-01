@@ -1,3 +1,4 @@
+/* ---------------- IMPORTS ---------------- */
 const express = require('express');
 const mongoose = require('mongoose');
 const cors = require('cors');
@@ -9,9 +10,9 @@ const app = express();
 /* ---------------- MIDDLEWARE ---------------- */
 app.use(cors());
 app.use(express.json());
-app.use(express.static('public'));
+app.use(express.static('public')); // Serve your frontend files
 
-/* ---------------- HEALTH CHECK (RENDER) ---------------- */
+/* ---------------- HEALTH CHECK (Render) ---------------- */
 app.get('/healthz', (req, res) => res.send('OK'));
 
 /* ---------------- MONGODB CONNECTION ---------------- */
@@ -29,17 +30,17 @@ const transporter = nodemailer.createTransport({
   port: 587,
   secure: false,
   auth: {
-    user: 'apikey', // literally "apikey"
+    user: 'apikey',                // literally the word "apikey"
     pass: process.env.SENDGRID_API_KEY
   }
 });
 
 transporter.verify(err => {
-  if (err) console.error('Email config error:', err);
+  if (err) console.error('SendGrid config error:', err);
   else console.log('SendGrid ready ✔');
 });
 
-/* ---------------- SCHEMA ---------------- */
+/* ---------------- MONGOOSE SCHEMA ---------------- */
 const DiscipleSchema = new mongoose.Schema({
   matricNo: String,
   serialNo: Number,
@@ -77,9 +78,10 @@ app.post('/register', async (req, res) => {
     // Convert checkboxes to boolean
     ['truth','rules','attendance','confidential'].forEach(k => data[k] = !!data[k]);
 
-    // Generate serial and matric number
+    // Generate Serial & Matric Number
     const lastStudent = await Disciple.findOne().sort({ createdAt: -1 });
     let serialNo = lastStudent?.serialNo ? lastStudent.serialNo + 1 : 1;
+
     if (serialNo > 300) return res.status(400).json({ message: 'Registration limit reached' });
 
     const matricNo = `RNB/2026/DTC/${String(serialNo).padStart(3,'0')}`;
@@ -133,11 +135,7 @@ app.post('/register', async (req, res) => {
     res.status(500).json({ message: 'Server error', error: err.message });
   }
 });
-// Health check endpoint for Render
-app.get('/healthz', (req, res) => {
-  res.send('OK');
-});
 
 /* ---------------- START SERVER ---------------- */
-const PORT = process.env.PORT || 10000; // Render recommends using their assigned port
+const PORT = process.env.PORT || 10000; // Render uses assigned port
 app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
