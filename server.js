@@ -20,9 +20,6 @@ mongoose.connect(process.env.MONGO_URI)
   .then(() => console.log('MongoDB Connected ✔'))
   .catch(err => console.error('MongoDB Error:', err));
 
-  .then(() => console.log('MongoDB Connected ✔'))
-  .catch(err => console.error('MongoDB Error:', err));
-
 /* ---------------- SENDGRID TRANSPORTER ---------------- */
 const transporter = nodemailer.createTransport({
   host: 'smtp.sendgrid.net',
