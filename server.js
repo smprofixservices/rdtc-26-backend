@@ -1,38 +1,48 @@
-const nodemailer = require('nodemailer');
 const express = require('express');
 const mongoose = require('mongoose');
 const cors = require('cors');
+const nodemailer = require('nodemailer');
 require('dotenv').config();
 
 const app = express();
+
+/* ---------------- MIDDLEWARE ---------------- */
 app.use(cors());
 app.use(express.json());
-app.use(express.static('public')); // Serve your front-end from 'public'
+app.use(express.static('public'));
 
-// ---------------- MongoDB Connection ----------------
-mongoose.connect(process.env.MONGO_URI)
-  .then(() => console.log("MongoDB Connected..."))
-  .catch(err => console.error("MongoDB connection error:", err));
+/* ---------------- HEALTH CHECK (RENDER) ---------------- */
+app.get('/healthz', (req, res) => res.send('OK'));
 
-// ---------------- Nodemailer Transporter ----------------
+/* ---------------- MONGODB CONNECTION ---------------- */
+mongoose
+  .connect(process.env.MONGO_URI, {
+    useNewUrlParser: true,
+    useUnifiedTopology: true
+  })
+  .then(() => console.log('MongoDB Connected ✔'))
+  .catch(err => console.error('MongoDB Error:', err));
+
+/* ---------------- SENDGRID TRANSPORTER ---------------- */
 const transporter = nodemailer.createTransport({
-  service: 'gmail',
+  host: 'smtp.sendgrid.net',
+  port: 587,
+  secure: false,
   auth: {
-    user: process.env.EMAIL_USER, // Your Gmail
-    pass: process.env.EMAIL_PASS  // App password generated
+    user: 'apikey', // literally "apikey"
+    pass: process.env.SENDGRID_API_KEY
   }
 });
 
-transporter.verify((error, success) => {
-  if (error) console.log("Email config error:", error);
-  else console.log("Email server ready ✔");
+transporter.verify(err => {
+  if (err) console.error('Email config error:', err);
+  else console.log('SendGrid ready ✔');
 });
 
-// ---------------- Schema / Model ----------------
+/* ---------------- SCHEMA ---------------- */
 const DiscipleSchema = new mongoose.Schema({
   matricNo: String,
   serialNo: Number,
-
   year: Number,
   version: String,
   fullName: String,
@@ -57,160 +67,70 @@ const DiscipleSchema = new mongoose.Schema({
   confidential: Boolean
 }, { timestamps: true });
 
-const Disciple = mongoose.model("Disciple", DiscipleSchema);
+const Disciple = mongoose.model('Disciple', DiscipleSchema);
 
-// ---------------- API Route ----------------
-app.post("/register", async (req, res) => {
+/* ---------------- REGISTER ROUTE ---------------- */
+app.post('/register', async (req, res) => {
   try {
-    console.log("Received form data:", req.body);
-
     const data = req.body;
-    ['truth','rules','attendance','confidential'].forEach(name => {
-      data[name] = !!data[name]; // Convert checkboxes to boolean
-    });
 
-   // ---------------- Generate Serial & Matric Number ----------------
+    // Convert checkboxes to boolean
+    ['truth','rules','attendance','confidential'].forEach(k => data[k] = !!data[k]);
 
-// 1️⃣ Get last registered student
-const lastStudent = await Disciple.findOne().sort({ createdAt: -1 });
+    // Generate serial and matric number
+    const lastStudent = await Disciple.findOne().sort({ createdAt: -1 });
+    let serialNo = lastStudent?.serialNo ? lastStudent.serialNo + 1 : 1;
+    if (serialNo > 300) return res.status(400).json({ message: 'Registration limit reached' });
 
-// 2️⃣ Start serial number
-let serialNo = 1;
+    const matricNo = `RNB/2026/DTC/${String(serialNo).padStart(3,'0')}`;
+    data.serialNo = serialNo;
+    data.matricNo = matricNo;
 
-if (lastStudent && lastStudent.serialNo) {
-  serialNo = lastStudent.serialNo + 1;
-}
+    await new Disciple(data).save();
 
-// 3️⃣ Optional limit (safety)
-if (serialNo > 300) {
-  return res.status(400).json({
-    message: "Registration limit reached"
-  });
-}
-
-// 4️⃣ Generate matric number
-const matricNo = `RNB/2026/DTC/${String(serialNo).padStart(3, '0')}`;
-
-// 5️⃣ Attach to data
-data.serialNo = serialNo;
-data.matricNo = matricNo;
-
-// 6️⃣ Save to database
-const newEntry = new Disciple(data);
-await newEntry.save();
-
-
-    // ---------------- Send Email ----------------
+    // Send Email
     const mailOptions = {
-  from: `"Revive NUB RDTC" <${process.env.EMAIL_USER}>`,
-  to: data.email,
-  subject: "Notification of Offer of Provisional Admission",
-  html: `
-  <div style="font-family: Arial, sans-serif; background:#f4f4f4; padding:20px">
-
-    <div style="
-      max-width:700px;
-      margin:auto;
-      background:#111;
-      color:#fff;
-      border-radius:8px;
-      overflow:hidden;
-    ">
-
-      <!-- HEADER -->
-      <div style="
-        background: linear-gradient(135deg, rgba(173,216,230,0.5), rgba(0,0,128,0.5), rgba(255,69,0,0.3));
-        padding:30px;
-        text-align:center;
-      ">
-        <img 
-          src="https://yourdomain.com/logo.png"
-          alt="Revive NUB Logo"
-          style="max-width:120px; margin-bottom:10px;"
-        />
-
-        <h2 style="margin:0; color:#fff;">
-          Revive NUB Discipleship Training Course
-        </h2>
-
-        <p style="margin-top:8px; font-size:15px;">
-          Notification of Offer of Provisional Admission
-        </p>
-      </div>
-
-      <!-- BODY -->
-      <div style="padding:30px">
-
-        <p>Dear <strong>${data.fullName}</strong>,</p>
-
-        <p>
-          We are pleased to inform you that you have been offered 
-          <strong>provisional admission</strong> into the 
-          <strong>Revive NUB Discipleship Training Course (RDTC-26)</strong>.
-        </p>
-
-        <div style="
-          background:#1e1e1e;
-          border-left:4px solid #d4af37;
-          padding:15px;
-          margin:20px 0;
-        ">
-          <p style="margin:0;">
-            <strong>Matriculation Number</strong><br/>
-            <span style="font-size:18px; color:#d4af37;">
-              ${matricNo}
-            </span>
-          </p>
+      from: `"Revive NUB RDTC" <${process.env.EMAIL_FROM}>`,
+      to: data.email,
+      subject: 'Notification of Provisional Admission',
+      html: `
+        <div style="font-family:Arial;background:#f4f4f4;padding:20px">
+          <div style="max-width:700px;margin:auto;background:#111;color:#fff;border-radius:8px">
+            <div style="padding:30px;text-align:center;background:linear-gradient(135deg,#add8e6,#000080,#ff4500)">
+              <img src="https://yourdomain.com/logo.png" style="max-width:120px"><br>
+              <h2>Revive NUB Discipleship Training Course</h2>
+              <p>Provisional Admission</p>
+            </div>
+            <div style="padding:30px">
+              <p>Dear <strong>${data.fullName}</strong>,</p>
+              <p>You have been offered provisional admission into <strong>RDTC-26</strong>.</p>
+              <div style="background:#1e1e1e;border-left:4px solid #d4af37;padding:15px;margin:20px 0">
+                <strong>Matric Number:</strong><br>
+                <span style="font-size:18px;color:#d4af37">${matricNo}</span>
+              </div>
+              <p>Find attached the RDTC Student Guide.</p>
+              <a href="https://chat.whatsapp.com/IV38qRxtveS8JuP92eJboZ"
+                 style="display:inline-block;padding:10px 20px;background:#25D366;color:#fff;border-radius:5px;text-decoration:none">
+                Join WhatsApp Group
+              </a>
+              <p><br>Admissions Office<br><strong>Revive NUB</strong></p>
+            </div>
+          </div>
         </div>
+      `,
+      attachments: [{
+        filename: 'RDTC Student Guide.pdf',
+        path: './public/RDTC Student Guide.pdf'
+      }]
+    };
 
-        <p>
-          This admission is subject to your full participation and strict
-          compliance with the rules and regulations of RDTC.
-        </p>
+    await transporter.sendMail(mailOptions);
 
-        <p>
-          Kindly find attached the official <strong>RDTC Student Guide</strong>
-          for further instructions.
-        </p>
+    res.json({ message: 'Registration successful', matricNo });
 
-        <br/>
-        <a href="https://chat.whatsapp.com/IV38qRxtveS8JuP92eJboZ" 
-      style="display:inline-block; padding:10px 20px; background-color:#25D366; color:white; text-decoration:none; border-radius:5px;">
-      Join WhatsApp Group
-  </a>
-
-
-        <p>
-          Congratulations once again.<br/><br/>
-          <strong>Admissions Office</strong><br/>
-          Revive NUB
-        </p>
-
-      </div>
-
-    </div>
-  </div>
-  `,
-
-  attachments: [
-    {
-      filename: "RDTC Student Guide.pdf",
-      path: "./public/RDTC Student Guide.pdf",
-      contentType: "application/pdf"
-    }
-  ]
-};
-
-
-    transporter.sendMail(mailOptions, (err, info) => {
-      if (err) console.error("Email sending error:", err);
-      else console.log("Email sent:", info.response);
-    });
-
-    return res.status(200).json({ message: "Registration successful!" });
-  } catch (error) {
-    console.error(error);
-    return res.status(500).json({ message: "Error saving registration", error: error.message });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ message: 'Server error', error: err.message });
   }
 });
 // Health check endpoint for Render
@@ -218,6 +138,6 @@ app.get('/healthz', (req, res) => {
   res.send('OK');
 });
 
-// ---------------- Start Server ----------------
-const PORT = process.env.PORT || 5000;
+/* ---------------- START SERVER ---------------- */
+const PORT = process.env.PORT || 10000; // Render recommends using their assigned port
 app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
