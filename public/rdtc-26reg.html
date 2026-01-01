@@ -106,6 +106,7 @@ button:disabled { opacity: 0.5; cursor: not-allowed; }
       <button type="button" id="nextBtn">Next</button>
     </div>
   </form>
+
   <!-- Move success message OUTSIDE the form -->
   <div id="successMessage" class="success"></div>
 </div>
@@ -126,36 +127,42 @@ button:disabled { opacity: 0.5; cursor: not-allowed; }
   }
 
   nextBtn.addEventListener('click', async () => {
-    if (currentStep < steps.length - 1) {
-      currentStep++;
-      showStep(currentStep);
-    } else {
-      try {
-        const formData = Object.fromEntries(new FormData(form));
+  if (currentStep < steps.length - 1) {
+    currentStep++;
+    showStep(currentStep);
+  } else {
+    try {
+      const formData = Object.fromEntries(new FormData(form));
 
-        const res = await fetch('/register', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify(formData)
-        });
+      // ✅ Convert checkboxes to boolean
+      ['truth','rules','attendance','confidential'].forEach(name => {
+        formData[name] = formData[name] === 'on';
+      });
 
-        if (!res.ok) throw new Error('Network response was not ok');
+      const res = await fetch('https://rdtc-26-backend.onrender.com/register', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(formData)
+      });
 
-        const data = await res.json();
+      if (!res.ok) throw new Error('Network response was not ok');
 
-        // Hide the form and show success screen
-        form.style.display = 'none';
-        successMessage.innerHTML = `
-          <h2>🎉 Registration Successful!</h2>
-          <p>Thank you for registering for RDTC‑26. Your information has been successfully submitted.</p>
-        `;
-      } catch (err) {
-        console.error(err);
-        alert('Network Error. Please try again.');
-      }
+      const data = await res.json();
+
+      // Hide the form and show success screen
+      form.style.display = 'none';
+      successMessage.innerHTML = `
+        <h2>🎉 Registration Successful!</h2>
+        <p>Thank you for registering for RDTC‑26. Your information has been successfully submitted.</p>
+        <p>Check your email for confirmation and your matriculation number.</p>
+      `;
+    } catch (err) {
+      console.error(err);
+      alert('Network Error. Please try again.');
     }
-  });
-
+  }
+});
+    
   prevBtn.addEventListener('click', () => {
     if (currentStep > 0) {
       currentStep--;
@@ -163,7 +170,6 @@ button:disabled { opacity: 0.5; cursor: not-allowed; }
     }
   });
 </script>
-
 
 </body>
 </html>

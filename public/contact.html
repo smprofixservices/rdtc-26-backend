@@ -282,22 +282,35 @@ footer {
 </footer>
 
 <script>
-const slides = document.querySelectorAll('.slide');
-let index = 0;
-
-setInterval(() => {
-  slides[index].classList.remove('active');
-  index = (index + 1) % slides.length;
-  slides[index].classList.add('active');
-}, 10000);
-
-document.getElementById('contactForm').addEventListener('submit', e => {
+document.getElementById('contactForm').addEventListener('submit', async e => {
   e.preventDefault();
-  document.getElementById('successMsg').textContent =
-    "Thank you! Your message has been received.";
-  e.target.reset();
+
+  // Gather form data
+  const formData = {
+    fullName: e.target[0].value,
+    email: e.target[1].value,
+    message: e.target[2].value
+  };
+
+  try {
+    const res = await fetch('https://rdtc-26-backend.onrender.com/register', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(formData)
+    });
+
+    const result = await res.json();
+    document.getElementById('successMsg').textContent = result.message;
+    e.target.reset();
+
+  } catch (err) {
+    document.getElementById('successMsg').textContent =
+      'Error sending message. Try again later.';
+    console.error(err);
+  }
 });
 </script>
+
 
 </body>
 </html>
