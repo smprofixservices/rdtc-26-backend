@@ -1,0 +1,241 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>RDTC-26 Courses</title>
+  <link rel="icon" href="logo.png" />
+
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: Arial, sans-serif;
+      background: linear-gradient(
+        135deg,
+        rgba(173,216,230,0.3),
+        rgba(0,0,128,0.3),
+        rgba(255,69,0,0.2)
+      );
+      color: #222;
+    }
+
+    /* Header */
+    header {
+      background: rgba(0,0,0,0.7);
+      padding: 30px 20px;
+      text-align: center;
+      color: #fff;
+    }
+
+    header img {
+      max-width: 100px;
+      margin-bottom: 10px;
+    }
+
+    header h1 {
+      font-size: 2.5rem;
+    }
+
+    header p {
+      margin-top: 10px;
+      font-size: 1.1rem;
+      opacity: 0.9;
+    }
+
+    /* Main Container */
+    .container {
+      max-width: 1100px;
+      margin: 50px auto;
+      padding: 20px;
+    }
+
+    .course {
+      background: #fff;
+      border-radius: 12px;
+      margin-bottom: 40px;
+      box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+      overflow: hidden;
+    }
+
+    .course-header {
+      padding: 25px;
+      background: linear-gradient(135deg, #ADD8E6, #000080, #FF4500);
+      color: #fff;
+    }
+
+    .course-header h2 {
+      font-size: 1.8rem;
+    }
+
+    .course-body {
+      padding: 25px;
+    }
+
+    .course-body p {
+      margin-bottom: 15px;
+      line-height: 1.7;
+    }
+
+    .topics {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 15px;
+      margin-top: 20px;
+    }
+
+    .topic {
+      background: #f4f8ff;
+      padding: 15px;
+      border-radius: 8px;
+      font-weight: bold;
+      color: #000080;
+      box-shadow: inset 0 0 0 1px rgba(0,0,0,0.05);
+    }
+
+    /* CTA */
+    .cta {
+      text-align: center;
+      margin: 60px 0;
+    }
+
+    .cta a {
+      background: linear-gradient(135deg, #ADD8E6, #000080, #FF4500);
+      color: #fff;
+      padding: 15px 40px;
+      border-radius: 8px;
+      text-decoration: none;
+      font-size: 1.2rem;
+      font-weight: bold;
+      box-shadow: 0 6px 15px rgba(0,0,0,0.2);
+      transition: transform 0.3s;
+    }
+
+    .cta a:hover {
+      transform: translateY(-3px);
+    }
+
+    /* Responsive */
+    @media (max-width: 768px) {
+      header h1 {
+        font-size: 2rem;
+      }
+    }
+  </style>
+</head>
+<body>
+
+<header>
+  <img src="logo.png" alt="Revive NUB Logo" />
+  <h1>RDTC-26 Course Curriculum</h1>
+  <p>Equipping believers with truth, power, discipline, and purpose</p>
+</header>
+
+<div class="container">
+
+  <!-- COURSE 1 -->
+  <div class="course">
+    <div class="course-header">
+      <h2>PARAKLETOLOGY</h2>
+    </div>
+    <div class="course-body">
+      <p>
+        This course establishes believers in their identity in Christ and
+        builds a strong foundation in spiritual realities and character.
+      </p>
+      <div class="topics">
+        <div class="topic">Redemption Realities (RR101)</div>
+        <div class="topic">The Holy Spirit (THS102)</div>
+        <div class="topic">Priesthood, Prayer & Fasting (PPF103)</div>
+        <div class="topic">Personalised Dealings (PDS104)</div>
+        <div class="topic">Character School (CS105)</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- COURSE 2 -->
+  <div class="course">
+    <div class="course-header">
+      <h2>LEADERSHIP</h2>
+    </div>
+    <div class="course-body">
+      <p>
+        This course develops leadership capacity, vision clarity, and kingdom
+        responsibility in every disciple.
+      </p>
+      <div class="topics">
+        <div class="topic">Concept OF Leadership(COL201)</div>
+        <div class="topic">Prinicipled Centered Leaders (PCL202)</div>
+        <div class="topic">Visionsss (VSSS203)</div>
+        <div class="topic">the Law of Progression & Retrogression(LPR204)</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- COURSE 3 -->
+  <div class="course">
+    <div class="course-header">
+      <h2>METAMORPHOSIS</h2>
+    </div>
+    <div class="course-body">
+      <p>
+        Focused on mind renewal, discipline, productivity, and personal
+        transformation for kingdom relevance.
+      </p>
+      <div class="topics">
+        <div class="topic">Identity (ID301)</div>
+        <div class="topic">Mindset & Strongholds (MS302)</div>
+        <div class="topic">Time (Management,Goal setting & Graph)(TMG303)</div>
+        <div class="topic">Human Relations & Management (HRM304)</div>
+        <div class="topic">Physical & Health Education (PHE305)</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- COURSE 4 -->
+  <div class="course">
+    <div class="course-header">
+      <h2>KINGDOM SERVICE</h2>
+    </div>
+    <div class="course-body">
+      <p>
+        This course trains believers in ministry service, kingdom advancement,
+        stewardship.
+      </p>
+      <div class="topics">
+        <div class="topic">Concept of Kingdom Service (COS401)</div>
+        <div class="topic">Kingdom Advancement (KAD402)</div>
+        <div class="topic">Mountain of Influence (MOI403)</div>
+        <div class="topic">Evangelism (EVG404)</div>
+      </div>
+    </div>
+  </div>
+
+   <!-- COURSE 4 -->
+  <div class="course">
+    <div class="course-header">
+      <h2>FINANCE</h2>
+    </div>
+    <div class="course-body">
+      <p>
+        This course trains believers in the principles, inteligence and administration of Kingdom Finance
+      </p>
+      <div class="topics">
+        <div class="topic">Concept of Finance & Prosperity (COF501)</div>
+        <div class="topic">Pillars of Wealth (POW502)</div>
+        <div class="topic">Laws of Prosperity (LOP503)</div>
+        <div class="topic">Mechanics of Money (MOM504)</div>
+        <div class="topic">How to Start a Business (HSB505)</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- CTA -->
+  <div class="cta">
+    <a href="http://localhost:5000/rdtc-26reg.html">Proceed to Registration</a>
+  </div>
+
+</div>
+
+</body>
+</html>
