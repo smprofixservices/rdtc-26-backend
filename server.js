@@ -11,7 +11,7 @@ const app = express();
 /* ---------------- MIDDLEWARE ---------------- */
 app.use(cors());
 app.use(express.json());
-app.use(express.static('public'));
+app.use(express.static('public')); // Serve frontend files
 
 /* ---------------- HEALTH CHECK ---------------- */
 app.get('/healthz', (req, res) => res.send('OK'));
@@ -25,7 +25,7 @@ mongoose
   .then(() => console.log('MongoDB Connected ✔'))
   .catch(err => console.error('MongoDB Error:', err));
 
-/* ---------------- SCHEMA ---------------- */
+/* ---------------- MONGOOSE SCHEMA ---------------- */
 const DiscipleSchema = new mongoose.Schema({
   matricNo: String,
   serialNo: Number,
@@ -60,10 +60,12 @@ app.post('/register', async (req, res) => {
   try {
     const data = req.body;
 
+    // Convert checkboxes to boolean
     ['truth','rules','attendance','confidential'].forEach(
       k => data[k] = !!data[k]
     );
 
+    // Generate Serial & Matric Number
     const lastStudent = await Disciple.findOne().sort({ createdAt: -1 });
     const serialNo = lastStudent?.serialNo ? lastStudent.serialNo + 1 : 1;
 
@@ -75,6 +77,7 @@ app.post('/register', async (req, res) => {
     data.serialNo = serialNo;
     data.matricNo = matricNo;
 
+    // Save to MongoDB
     await new Disciple(data).save();
 
     /* ---------------- EMAIL (UNCHANGED MESSAGE + ATTACHMENT) ---------------- */
@@ -115,20 +118,25 @@ app.post('/register', async (req, res) => {
     </div>
     `;
 
-    await sgMail.send({
-      to: data.email,
-      from: process.env.EMAIL_FROM,
-      subject: 'Notification of Offer of Provisional Admission',
-      html: emailHtml,
-      attachments: [
-        {
-          content: fs.readFileSync('./public/RDTC Student Guide.pdf').toString('base64'),
-          filename: 'RDTC Student Guide.pdf',
-          type: 'application/pdf',
-          disposition: 'attachment'
-        }
-      ]
-    });
+    try {
+      await sgMail.send({
+        to: data.email,
+        from: process.env.EMAIL_FROM,
+        subject: 'Notification of Offer of Provisional Admission',
+        html: emailHtml,
+        attachments: [
+          {
+            content: fs.readFileSync('./public/RDTC Student Guide.pdf').toString('base64'),
+            filename: 'RDTC Student Guide.pdf',
+            type: 'application/pdf',
+            disposition: 'attachment'
+          }
+        ]
+      });
+      console.log(`Email sent to ${data.email} ✔`);
+    } catch (emailErr) {
+      console.error('SendGrid error:', emailErr);
+    }
 
     res.json({
       message: 'Registration successful',
@@ -146,6 +154,4 @@ app.post('/register', async (req, res) => {
 
 /* ---------------- START SERVER ---------------- */
 const PORT = process.env.PORT || 10000;
-app.listen(PORT, () =>
-  console.log(`Server running on port ${PORT}`)
-);
+app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
